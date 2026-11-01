@@ -41,7 +41,7 @@ public class StatsClient extends BaseClient {
             }
         }
 
-        String uri = builder.build().toUriString();
+        String uri = builder.encode().build().toUriString();
 
         ResponseEntity<List<StatHitResponseElement>> response = rest.exchange(
                 makeUri(uri),
