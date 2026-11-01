@@ -1,14 +1,12 @@
 package ru.practicum.ewm.stats.clients;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.web.util.DefaultUriBuilderFactory;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import ru.practicum.ewm.stats.base.BaseClient;
 import ru.practicum.ewm.stats.dto.StatHitResponseElement;
@@ -23,16 +21,13 @@ import static ru.practicum.ewm.stats.base.ClientConstants.*;
 @Component
 public class StatsClient extends BaseClient {
 
-    public StatsClient(RestTemplateBuilder builder, @Value("${stats-server.url}") String serverUrl) {
-        super(
-                builder
-                        .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl))
-                        .requestFactory(() -> new JdkClientHttpRequestFactory())
-                        .build()
-        );
+    public StatsClient(RestTemplate rest,
+                       DiscoveryClient discoveryClient) {
+        super(rest, discoveryClient);
     }
 
-    public List<StatHitResponseElement> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
+    public List<StatHitResponseElement> getStats(LocalDateTime start, LocalDateTime end,
+                                                 List<String> uris, boolean unique) {
         log.debug("Get stats from {} to {}, uris={}, unique={}", start, end, uris, unique);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(API_PREFIX_STATS)
@@ -49,7 +44,7 @@ public class StatsClient extends BaseClient {
         String uri = builder.build().toUriString();
 
         ResponseEntity<List<StatHitResponseElement>> response = rest.exchange(
-                uri,
+                makeUri(uri),
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<List<StatHitResponseElement>>() {
