@@ -25,6 +25,6 @@ public class Compilation {
     @Column(name = "title", length = 50)
     private String title;
 
-    @OneToMany(mappedBy = "compilation", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "compilation", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CompilationEvent> events;
 }

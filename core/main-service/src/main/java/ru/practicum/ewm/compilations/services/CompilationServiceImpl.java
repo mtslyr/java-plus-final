@@ -71,6 +71,7 @@ public class CompilationServiceImpl implements CompilationService {
 
         if (dto.getEvents() != null) {
             compilation.getEvents().clear();
+            compilationRepository.flush();
             List<Event> events = eventRepository
                     .findByIdIn(dto.getEvents());
             createCompilationEvents(compilation, events);

@@ -19,12 +19,16 @@ spring:
         - id: categories
           uri: lb://main-service
           predicates:
-              - Path=/categories/**
+              - Path=/categories,/categories/**
         - id: events
           uri: lb://main-service
           predicates:
-            - Path=/events/**
+            - Path=/events,/events/**
         - id: locations
           uri: lb://main-service
           predicates:
-            - Path=/locations
+            - Path=/locations,/locations/**
+        - id: compilations
+          uri: lb://main-service
+          predicates:
+            - Path=/compilations,/compilations/**

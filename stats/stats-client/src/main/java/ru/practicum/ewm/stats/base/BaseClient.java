@@ -11,7 +11,7 @@ import ru.practicum.ewm.stats.exception.StatsServerUnavailable;
 import java.net.URI;
 
 public class BaseClient {
-    private static final String STATS_SERVER_ID = "ewm-stats-server";
+    private static final String STATS_SERVER_ID = "stats-server";
 
     private final DiscoveryClient discoveryClient;
     private final RetryTemplate retryTemplate;
