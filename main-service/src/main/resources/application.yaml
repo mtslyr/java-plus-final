@@ -1,0 +1,34 @@
+server:
+  port: 8080
+
+stats-server:
+  url: http://stats-server:9090
+
+spring:
+  datasource:
+    url: jdbc:postgresql://ewm-db:6541/ewm-main
+    username: ewm
+    password: ewm
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        jdbc.time_zone: UTC
+  sql:
+    init:
+      mode: always
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: UTC
+
+  shutdown: graceful
+
+logging:
+  level:
+    root: info
+    ru.practicum.ewm: debug
+    org.zalando.logbook: trace
