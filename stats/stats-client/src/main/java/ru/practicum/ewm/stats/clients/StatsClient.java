@@ -1,12 +1,12 @@
 package ru.practicum.ewm.stats.clients;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import ru.practicum.ewm.stats.base.BaseClient;
 import ru.practicum.ewm.stats.dto.StatHitResponseElement;
@@ -21,9 +21,9 @@ import static ru.practicum.ewm.stats.base.ClientConstants.*;
 @Component
 public class StatsClient extends BaseClient {
 
-    public StatsClient(RestTemplate rest,
+    public StatsClient(RestTemplateBuilder restTemplateBuilder,
                        DiscoveryClient discoveryClient) {
-        super(rest, discoveryClient);
+        super(restTemplateBuilder, discoveryClient);
     }
 
     public List<StatHitResponseElement> getStats(LocalDateTime start, LocalDateTime end,

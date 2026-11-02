@@ -1,17 +1,13 @@
 package ru.practicum.ewm.stats.clients;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.ewm.stats.base.BaseClient;
 import ru.practicum.ewm.stats.dto.StatHitRequest;
 
@@ -21,9 +17,9 @@ import static ru.practicum.ewm.stats.base.ClientConstants.API_PREFIX_HIT;
 @Component
 public class HitClient extends BaseClient {
 
-    public HitClient(RestTemplate restTemplate,
+    public HitClient(RestTemplateBuilder restTemplateBuilder,
                      DiscoveryClient discoveryClient) {
-        super(restTemplate, discoveryClient);
+        super(restTemplateBuilder, discoveryClient);
     }
 
     public void saveHit(StatHitRequest request) {
