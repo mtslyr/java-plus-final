@@ -13,6 +13,11 @@
     <name>core</name>
 
     <modules>
+        <module>interaction-api</module>
+        <module>user-service</module>
+        <module>event-service</module>
+        <module>request-service</module>
+        <module>comment-service</module>
         <module>main-service</module>
     </modules>
 </project>
