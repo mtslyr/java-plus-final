@@ -1,0 +1,25 @@
+spring:
+  main:
+    banner-mode: OFF
+    log-startup-info: false
+
+logging:
+  level:
+    ru.practicum: WARN
+    org:
+      springframework: ERROR
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health"
+  endpoint:
+    health:
+      show-details: NEVER
+      probes:
+        enabled: true
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${random.value}
