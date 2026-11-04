@@ -32,19 +32,58 @@ services:
       interval: 5s
       retries: 10
 
-  #  ewm-service:
+  #  user-service:
   #    build:
   #      context: .
-  #      dockerfile: core/main-service/Dockerfile
-  #    image: ewm-service
-  #    container_name: ewm-service
-  #    ports:
-  #      - "8088:8088"
+  #      dockerfile: core/user-service/Dockerfile
+  #    image: user-service
+  #    container_name: user-service
   #    environment:
-  #      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewm-main
+  #      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewm-user
   #      - SPRING_DATASOURCE_USERNAME=ewm
   #      - SPRING_DATASOURCE_PASSWORD=ewm
-  #      - STATS_SERVER_URL=http://stats-server:9090
+  #    depends_on:
+  #      ewm-db:
+  #        condition: service_healthy
+
+  #  event-service:
+  #    build:
+  #      context: .
+  #      dockerfile: core/event-service/Dockerfile
+  #    image: event-service
+  #    container_name: event-service
+  #    environment:
+  #      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewm-event
+  #      - SPRING_DATASOURCE_USERNAME=ewm
+  #      - SPRING_DATASOURCE_PASSWORD=ewm
+  #    depends_on:
+  #      ewm-db:
+  #        condition: service_healthy
+
+  #  request-service:
+  #    build:
+  #      context: .
+  #      dockerfile: core/request-service/Dockerfile
+  #    image: request-service
+  #    container_name: request-service
+  #    environment:
+  #      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewm-request
+  #      - SPRING_DATASOURCE_USERNAME=ewm
+  #      - SPRING_DATASOURCE_PASSWORD=ewm
+  #    depends_on:
+  #      ewm-db:
+  #        condition: service_healthy
+
+  #  comment-service:
+  #    build:
+  #      context: .
+  #      dockerfile: core/comment-service/Dockerfile
+  #    image: comment-service
+  #    container_name: comment-service
+  #    environment:
+  #      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewm-comment
+  #      - SPRING_DATASOURCE_USERNAME=ewm
+  #      - SPRING_DATASOURCE_PASSWORD=ewm
   #    depends_on:
   #      ewm-db:
   #        condition: service_healthy
@@ -57,11 +96,11 @@ services:
     environment:
       - POSTGRES_PASSWORD=ewm
       - POSTGRES_USER=ewm
-      - POSTGRES_DB=ewm-main
     volumes:
       - ewm_db_data:/var/lib/postgresql/data
+      - ./infra/db/init-databases.sql:/docker-entrypoint-initdb.d/init-databases.sql:ro
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER" ]
+      test: [ "CMD-SHELL", "pg_isready -q -U $$POSTGRES_USER" ]
       timeout: 5s
       interval: 5s
       retries: 10

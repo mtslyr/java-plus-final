@@ -10,8 +10,8 @@ import java.util.List;
 public interface EventApi {
 
     @GetMapping("/internal/events/{eventId}")
-    EventInternalDto getById(@PathVariable Long eventId);
+    EventInternalDto getById(@PathVariable("eventId") Long eventId);
 
     @DeleteMapping("/internal/events/users/{userId}")
-    List<Long> deleteUserData(@PathVariable Long userId);
+    List<Long> deleteUserData(@PathVariable("userId") Long userId);
 }

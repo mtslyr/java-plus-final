@@ -11,8 +11,9 @@ import java.util.Map;
 public interface RequestApi {
 
     @GetMapping("/internal/requests/confirmed")
-    Map<Long, Long> getConfirmedCounts(@RequestParam Collection<Long> eventIds);
+    Map<Long, Long> getConfirmedCounts(@RequestParam("eventIds") Collection<Long> eventIds);
 
     @DeleteMapping("/internal/requests/users/{userId}")
-    void deleteUserData(@PathVariable Long userId, @RequestParam(required = false) Collection<Long> eventIds);
+    void deleteUserData(@PathVariable("userId") Long userId,
+                        @RequestParam(value = "eventIds", required = false) Collection<Long> eventIds);
 }

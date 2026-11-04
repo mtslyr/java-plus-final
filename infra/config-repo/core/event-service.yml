@@ -3,9 +3,9 @@ server:
 
 spring:
   application:
-    name: main-service
+    name: event-service
   datasource:
-    url: jdbc:postgresql://localhost:6542/ewm-main
+    url: jdbc:postgresql://localhost:6542/ewm-event
     username: ewm
     password: ewm
     driver-class-name: org.postgresql.Driver
@@ -20,11 +20,7 @@ spring:
   sql:
     init:
       mode: always
-      schema-locations:
-        - classpath:schema-user.sql
-        - classpath:schema-event.sql
-        - classpath:schema-request.sql
-        - classpath:schema-comment.sql
+      schema-locations: classpath:schema-event.sql
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: UTC

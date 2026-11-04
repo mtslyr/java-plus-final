@@ -12,11 +12,12 @@ import java.util.Set;
 public interface UserApi {
 
     @GetMapping("/internal/users")
-    List<UserShortDto> getShortByIds(@RequestParam Collection<Long> ids);
+    List<UserShortDto> getShortByIds(@RequestParam("ids") Collection<Long> ids);
 
     @GetMapping("/internal/users/{userId}/exists")
-    boolean existsById(@PathVariable Long userId);
+    boolean existsById(@PathVariable("userId") Long userId);
 
     @GetMapping("/internal/users/{followerId}/followed")
-    Set<Long> getFollowedIds(@PathVariable Long followerId, @RequestParam Collection<Long> userIds);
+    Set<Long> getFollowedIds(@PathVariable("followerId") Long followerId,
+                             @RequestParam("userIds") Collection<Long> userIds);
 }

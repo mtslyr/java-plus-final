@@ -11,8 +11,9 @@ import java.util.Map;
 public interface CommentApi {
 
     @GetMapping("/internal/comments/count")
-    Map<Long, Long> getCommentCounts(@RequestParam Collection<Long> eventIds);
+    Map<Long, Long> getCommentCounts(@RequestParam("eventIds") Collection<Long> eventIds);
 
     @DeleteMapping("/internal/comments/users/{userId}")
-    void deleteUserData(@PathVariable Long userId, @RequestParam(required = false) Collection<Long> eventIds);
+    void deleteUserData(@PathVariable("userId") Long userId,
+                        @RequestParam(value = "eventIds", required = false) Collection<Long> eventIds);
 }
