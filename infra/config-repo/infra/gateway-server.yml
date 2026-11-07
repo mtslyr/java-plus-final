@@ -7,28 +7,22 @@ spring:
       discovery:
         locator:
           enabled: false
+      # Routes are matched in order: specific paths go before general ones,
+      # e.g. /users/*/events/*/requests (request-service) before /users/*/events/** (event-service).
       routes:
-        - id: admin
-          uri: lb://main-service
+        - id: request-service
+          uri: lb://request-service
           predicates:
-            - Path=/admin/**
-        - id: users
-          uri: lb://main-service
+            - Path=/users/*/requests,/users/*/requests/**,/users/*/events/*/requests
+        - id: comment-service
+          uri: lb://comment-service
           predicates:
-              - Path=/users/**
-        - id: categories
-          uri: lb://main-service
+            - Path=/admin/comments/**,/users/*/comments,/users/*/comments/**,/users/*/events/*/comments,/events/*/comments,/events/*/comments/**
+        - id: user-service
+          uri: lb://user-service
           predicates:
-              - Path=/categories,/categories/**
-        - id: events
-          uri: lb://main-service
+            - Path=/admin/users,/admin/users/**,/users/*/subscriptions,/users/*/subscriptions/**
+        - id: event-service
+          uri: lb://event-service
           predicates:
-            - Path=/events,/events/**
-        - id: locations
-          uri: lb://main-service
-          predicates:
-            - Path=/locations,/locations/**
-        - id: compilations
-          uri: lb://main-service
-          predicates:
-            - Path=/compilations,/compilations/**
+            - Path=/admin/events,/admin/events/**,/admin/categories/**,/admin/compilations/**,/admin/locations,/admin/locations/**,/events,/events/**,/categories,/categories/**,/compilations,/compilations/**,/locations,/locations/**,/users/*/events,/users/*/events/**
