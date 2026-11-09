@@ -1,20 +1,4 @@
 services:
-  #  stats-server:
-  #    build:
-  #      context: .
-  #      dockerfile: stats/stats-server/Dockerfile
-  #    image: stats-server
-  #    container_name: stats-server
-  #    ports:
-  #      - "9090:9090"
-  #    environment:
-  #      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/ewm-stats
-  #      - SPRING_DATASOURCE_USERNAME=ewm
-  #      - SPRING_DATASOURCE_PASSWORD=ewm
-  #    depends_on:
-  #      stats-db:
-  #        condition: service_healthy
-
   stats-db:
     image: postgres:16.1
     container_name: stats-db
@@ -31,62 +15,6 @@ services:
       timeout: 5s
       interval: 5s
       retries: 10
-
-  #  user-service:
-  #    build:
-  #      context: .
-  #      dockerfile: core/user-service/Dockerfile
-  #    image: user-service
-  #    container_name: user-service
-  #    environment:
-  #      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewm-user
-  #      - SPRING_DATASOURCE_USERNAME=ewm
-  #      - SPRING_DATASOURCE_PASSWORD=ewm
-  #    depends_on:
-  #      ewm-db:
-  #        condition: service_healthy
-
-  #  event-service:
-  #    build:
-  #      context: .
-  #      dockerfile: core/event-service/Dockerfile
-  #    image: event-service
-  #    container_name: event-service
-  #    environment:
-  #      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewm-event
-  #      - SPRING_DATASOURCE_USERNAME=ewm
-  #      - SPRING_DATASOURCE_PASSWORD=ewm
-  #    depends_on:
-  #      ewm-db:
-  #        condition: service_healthy
-
-  #  request-service:
-  #    build:
-  #      context: .
-  #      dockerfile: core/request-service/Dockerfile
-  #    image: request-service
-  #    container_name: request-service
-  #    environment:
-  #      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewm-request
-  #      - SPRING_DATASOURCE_USERNAME=ewm
-  #      - SPRING_DATASOURCE_PASSWORD=ewm
-  #    depends_on:
-  #      ewm-db:
-  #        condition: service_healthy
-
-  #  comment-service:
-  #    build:
-  #      context: .
-  #      dockerfile: core/comment-service/Dockerfile
-  #    image: comment-service
-  #    container_name: comment-service
-  #    environment:
-  #      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewm-comment
-  #      - SPRING_DATASOURCE_USERNAME=ewm
-  #      - SPRING_DATASOURCE_PASSWORD=ewm
-  #    depends_on:
-  #      ewm-db:
-  #        condition: service_healthy
 
   ewm-db:
     image: postgres:16.1
