@@ -1,15 +1,11 @@
 package ru.practicum.ewm.event.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.event.dto.EventFullDto;
 import ru.practicum.ewm.event.dto.EventShortDto;
 import ru.practicum.ewm.event.service.EventService;
-import ru.practicum.ewm.stats.clients.HitClient;
-import ru.practicum.ewm.stats.dto.StatHitRequest;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -17,8 +13,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EventPublicController {
 
+    private static final String USER_ID_HEADER = "X-EWM-USER-ID";
+
     private final EventService eventService;
-    private final HitClient hitClient;
 
     @GetMapping("/events")
     public List<EventShortDto> getPublished(@RequestParam(required = false) String text,
@@ -30,26 +27,26 @@ public class EventPublicController {
                                             @RequestParam(required = false) String sort,
                                             @RequestParam(defaultValue = "0") Integer from,
                                             @RequestParam(defaultValue = "10") Integer size,
-                                            @RequestHeader(value = "X-EWM-UserId", required = false) Long userId,
-                                            HttpServletRequest request) {
-        saveHit(request);
+                                            @RequestHeader(value = "X-EWM-UserId", required = false) Long userId) {
         return eventService.getPublished(text, categories, paid, rangeStart, rangeEnd,
                 onlyAvailable, sort, from, size, userId);
     }
 
     @GetMapping("/events/{id}")
     public EventFullDto getPublishedById(@PathVariable Long id,
-                                         HttpServletRequest request) {
-        saveHit(request);
-        return eventService.getPublishedById(id);
+                                         @RequestHeader(USER_ID_HEADER) long userId) {
+        return eventService.getPublishedById(id, userId);
     }
 
-    private void saveHit(HttpServletRequest request) {
-        hitClient.saveHit(new StatHitRequest(
-                "ewm-main-service",
-                request.getRequestURI(),
-                request.getRemoteAddr(),
-                LocalDateTime.now()
-        ));
+    @GetMapping("/events/recommendations")
+    public List<EventShortDto> getRecommendations(@RequestHeader(USER_ID_HEADER) long userId,
+                                                  @RequestParam(defaultValue = "10") Integer maxResults) {
+        return eventService.getRecommendations(userId, maxResults);
+    }
+
+    @PutMapping("/events/{eventId}/like")
+    public void like(@PathVariable Long eventId,
+                     @RequestHeader(USER_ID_HEADER) long userId) {
+        eventService.like(userId, eventId);
     }
 }

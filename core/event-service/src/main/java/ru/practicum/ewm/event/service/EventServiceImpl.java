@@ -17,8 +17,12 @@ import ru.practicum.ewm.event.repository.EventRepository;
 import ru.practicum.ewm.event.repository.EventSpecification;
 import ru.practicum.ewm.common.exception.ConflictException;
 import ru.practicum.ewm.common.exception.ValidationException;
+import ru.practicum.ewm.common.exception.ServiceUnavailableException;
 import ru.practicum.ewm.common.exception.UserNotFoundException;
+import ru.practicum.ewm.interaction.api.RequestApi;
 import ru.practicum.ewm.interaction.api.UserApi;
+import ru.practicum.ewm.stats.clients.AnalyzerClient;
+import ru.practicum.ewm.stats.clients.CollectorClient;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -40,8 +44,11 @@ public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
     private final CategoryRepository categoryRepository;
     private final UserApi userApi;
+    private final RequestApi requestApi;
     private final EventEnricher enricher;
     private final EventMapper mapper;
+    private final CollectorClient collectorClient;
+    private final AnalyzerClient analyzerClient;
 
     @Override
     @Transactional
@@ -217,7 +224,7 @@ public class EventServiceImpl implements EventService {
         }
 
         boolean commentsSort = "COMMENTS".equals(sort);
-        boolean ratingSort = "RATING".equals(sort);
+        boolean ratingSort = "RATING".equals(sort) || "VIEWS".equals(sort);
         boolean noPaginationSort = commentsSort || ratingSort;
         List<Event> events;
         if (noPaginationSort) {
@@ -257,12 +264,9 @@ public class EventServiceImpl implements EventService {
             otherEvents.sort(Comparator.comparingLong(EventShortDto::getCommentCount).reversed());
         } else if (ratingSort) {
             Comparator<EventShortDto> byRating =
-                    Comparator.comparingLong(EventShortDto::getRating).reversed();
+                    Comparator.comparingDouble(EventShortDto::getRating).reversed();
             subscribedEvents.sort(byRating);
             otherEvents.sort(byRating);
-        } else if ("VIEWS".equals(sort)) {
-            subscribedEvents.sort(Comparator.comparingLong(EventShortDto::getViews));
-            otherEvents.sort(Comparator.comparingLong(EventShortDto::getViews));
         }
 
         result.addAll(subscribedEvents);
@@ -286,11 +290,51 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventFullDto getPublishedById(Long id) {
+    public EventFullDto getPublishedById(Long id, Long userId) {
         Event event = eventRepository.findByIdAndState(id, EventState.PUBLISHED)
                 .orElseThrow(() -> new EventNotFoundException(id));
 
+        try {
+            collectorClient.sendView(userId, id);
+        } catch (RuntimeException e) {
+            log.warn("Failed to send VIEW of user {} for event {}: {}", userId, id, e.getMessage());
+        }
         return enricher.toFullDto(event);
+    }
+
+    @Override
+    public List<EventShortDto> getRecommendations(Long userId, Integer maxResults) {
+        List<Long> eventIds;
+        try {
+            eventIds = analyzerClient.getRecommendationsForUser(userId, maxResults)
+                    .map(e -> (long) e.getEventId())
+                    .toList();
+        } catch (RuntimeException e) {
+            throw new ServiceUnavailableException("Recommendations are unavailable: " + e.getMessage());
+        }
+
+        Map<Long, Event> events = eventRepository.findAllById(eventIds).stream()
+                .collect(Collectors.toMap(Event::getId, e -> e));
+        return enricher.toShortDtos(eventIds.stream()
+                .map(events::get)
+                .filter(Objects::nonNull)
+                .toList());
+    }
+
+    @Override
+    public void like(Long userId, Long eventId) {
+        eventRepository.findByIdAndState(eventId, EventState.PUBLISHED)
+                .orElseThrow(() -> new EventNotFoundException(eventId));
+
+        if (!requestApi.isParticipant(userId, eventId)) {
+            throw new ValidationException("User " + userId + " can like only attended events, eventId=" + eventId);
+        }
+
+        try {
+            collectorClient.sendLike(userId, eventId);
+        } catch (RuntimeException e) {
+            throw new ServiceUnavailableException("Failed to save like: " + e.getMessage());
+        }
     }
 
     private void checkUserExists(Long userId) {

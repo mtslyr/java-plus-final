@@ -5,7 +5,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.MissingRequestValueException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -23,9 +23,9 @@ public class ErrorHandler {
         return new ResponseEntity<>(e.getErrorResponse(), status);
     }
 
-    @ExceptionHandler(MissingServletRequestParameterException.class)
+    @ExceptionHandler(MissingRequestValueException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleMissingParams(MissingServletRequestParameterException e) {
+    public ErrorResponse handleMissingParams(MissingRequestValueException e) {
         log.warn("400 BAD_REQUEST: ", e);
         return ErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST.name())

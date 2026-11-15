@@ -16,6 +16,11 @@
         <module>stats-client</module>
         <module>stats-server</module>
         <module>stats-dto</module>
+
+        <module>serialization</module>
+        <module>collector</module>
+        <module>aggregator</module>
+        <module>analyzer</module>
     </modules>
 
     <properties>
@@ -23,5 +28,9 @@
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <dependencies>
+
+    </dependencies>
 
 </project>

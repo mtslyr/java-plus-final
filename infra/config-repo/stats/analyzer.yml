@@ -1,0 +1,37 @@
+server:
+  port: 0
+
+grpc:
+  server:
+    port: 0
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:6541/ewm-stats
+    username: ewm
+    password: ewm
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc.time_zone: UTC
+  sql:
+    init:
+      mode: always
+  kafka:
+    topic:
+      user-actions: stats.user-actions.v1
+      event-similarity: stats.events-similarity.v1
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      enable-auto-commit: false
+      auto-offset-reset: earliest
+      user-actions:
+        group-id: ewm-stats-analyzer-user-actions
+        value-deserializer: ru.practicum.ewm.serialization.UserActionDeserializer
+      event-similarity:
+        group-id: ewm-stats-analyzer-event-similarity
+        value-deserializer: ru.practicum.ewm.serialization.EventSimilarityDeserializer

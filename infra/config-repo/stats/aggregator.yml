@@ -1,0 +1,14 @@
+spring:
+  kafka:
+    topic:
+      user-actions: stats.user-actions.v1
+      event-similarity: stats.events-similarity.v1
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: ru.practicum.ewm.serialization.KafkaAvroSerializer
+    consumer:
+      group-id: ewm-stats-aggregator
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: ru.practicum.ewm.serialization.UserActionDeserializer
+      enable-auto-commit: false
+      auto-offset-reset: earliest

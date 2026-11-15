@@ -11,6 +11,14 @@ spring:
           default:
             connect-timeout: 2000
             read-timeout: 4000
+  kafka:
+    bootstrap-servers: localhost:9092
+
+stats:
+  weights:
+    view: 0.4
+    register: 0.8
+    like: 1.0
 
 logging:
   level:

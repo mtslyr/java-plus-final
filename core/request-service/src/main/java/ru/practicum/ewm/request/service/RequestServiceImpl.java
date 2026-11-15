@@ -20,6 +20,7 @@ import ru.practicum.ewm.request.model.ParticipationRequest;
 import ru.practicum.ewm.request.model.RequestStatus;
 import ru.practicum.ewm.request.repository.ParticipationRequestRepository;
 import ru.practicum.ewm.common.exception.UserNotFoundException;
+import ru.practicum.ewm.stats.clients.CollectorClient;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ public class RequestServiceImpl implements RequestService {
     private final UserApi userApi;
     private final EventApi eventApi;
     private final RequestMapper mapper;
+    private final CollectorClient collectorClient;
 
     @Override
     @Transactional
@@ -74,6 +76,7 @@ public class RequestServiceImpl implements RequestService {
 
         request = requestRepository.save(request);
         log.debug("Request created: {} for event {}", request.getId(), eventId);
+        sendRegister(userId, eventId);
         return mapper.toRequestDto(request);
     }
 
@@ -184,6 +187,14 @@ public class RequestServiceImpl implements RequestService {
 
         log.debug("Requests confirmed: {}, rejected: {}", confirmedRequests.size(), rejectedRequests.size());
         return new EventRequestStatusUpdateResult(confirmedRequests, rejectedRequests);
+    }
+
+    private void sendRegister(Long userId, Long eventId) {
+        try {
+            collectorClient.sendRegister(userId, eventId);
+        } catch (RuntimeException e) {
+            log.warn("Failed to send REGISTER of user {} for event {}: {}", userId, eventId, e.getMessage());
+        }
     }
 
     private void checkUserExists(Long userId) {

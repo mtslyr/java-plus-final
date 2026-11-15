@@ -35,8 +35,8 @@ public class EventMapper {
                 .build();
     }
 
-    public EventFullDto toEventFullDto(Event event, UserShortDto initiator, Long views, Long confirmedRequests,
-                                       RatingStatsDto ratingStats, Long commentCount) {
+    public EventFullDto toEventFullDto(Event event, UserShortDto initiator, Long confirmedRequests,
+                                       RatingStatsDto ratingStats, Double rating, Long commentCount) {
         return EventFullDto.builder()
                 .id(event.getId())
                 .annotation(event.getAnnotation())
@@ -53,16 +53,15 @@ public class EventMapper {
                 .requestModeration(event.getRequestModeration())
                 .state(event.getState().name())
                 .title(event.getTitle())
-                .views(views)
                 .likes(ratingStats.getLikes())
                 .dislikes(ratingStats.getDislikes())
-                .rating(ratingStats.getRating())
+                .rating(rating)
                 .commentCount(commentCount)
                 .build();
     }
 
-    public EventShortDto toEventShortDto(Event event, UserShortDto initiator, Long views, Long confirmedRequests,
-                                         RatingStatsDto ratingStats, Long commentCount) {
+    public EventShortDto toEventShortDto(Event event, UserShortDto initiator, Long confirmedRequests,
+                                         RatingStatsDto ratingStats, Double rating, Long commentCount) {
         return EventShortDto.builder()
                 .id(event.getId())
                 .annotation(event.getAnnotation())
@@ -72,10 +71,9 @@ public class EventMapper {
                 .initiator(initiator)
                 .paid(event.getPaid())
                 .title(event.getTitle())
-                .views(views)
                 .likes(ratingStats.getLikes())
                 .dislikes(ratingStats.getDislikes())
-                .rating(ratingStats.getRating())
+                .rating(rating)
                 .commentCount(commentCount)
                 .build();
     }

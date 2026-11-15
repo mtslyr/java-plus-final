@@ -30,6 +30,11 @@ public class InternalRequestController implements RequestApi {
     }
 
     @Override
+    public boolean isParticipant(Long userId, Long eventId) {
+        return requestRepository.existsByRequesterIdAndEventIdAndStatus(userId, eventId, RequestStatus.CONFIRMED);
+    }
+
+    @Override
     @Transactional
     public void deleteUserData(Long userId, Collection<Long> eventIds) {
         requestRepository.deleteByRequesterId(userId);
