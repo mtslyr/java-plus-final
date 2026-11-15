@@ -2,6 +2,15 @@ spring:
   main:
     banner-mode: OFF
     log-startup-info: false
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
+      client:
+        config:
+          default:
+            connect-timeout: 2000
+            read-timeout: 4000
 
 logging:
   level:
