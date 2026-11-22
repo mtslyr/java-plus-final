@@ -9,7 +9,7 @@ import ru.practicum.ewm.stats.repository.EventSimilarityRepository;
 
 @Slf4j
 @Component
-public class EventSimilarityLoop extends KafkaPollingLoop<EventSimilarityAvro> {
+public class EventSimilarityLoop extends KafkaPollingLoop<String, EventSimilarityAvro> {
 
     private final EventSimilarityRepository repository;
 

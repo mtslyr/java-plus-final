@@ -27,7 +27,7 @@ public class AggregatorRunner implements ApplicationRunner {
     private static final Duration POLL_TIMEOUT = Duration.ofSeconds(1);
     private static final long SHUTDOWN_TIMEOUT_SECONDS = 15;
 
-    private final KafkaConsumer<String, UserActionAvro> consumer;
+    private final KafkaConsumer<Long, UserActionAvro> consumer;
     private final EventSimilarityProducer producer;
     private final SimilarityCalculator calculator;
     private final KafkaTopicProperties topics;
@@ -43,12 +43,12 @@ public class AggregatorRunner implements ApplicationRunner {
             log.info("Aggregator подписан на топик {}", topics.userActions());
 
             while (true) {
-                ConsumerRecords<String, UserActionAvro> records = consumer.poll(POLL_TIMEOUT);
+                ConsumerRecords<Long, UserActionAvro> records = consumer.poll(POLL_TIMEOUT);
                 if (records.isEmpty()) {
                     continue;
                 }
 
-                for (ConsumerRecord<String, UserActionAvro> record : records) {
+                for (ConsumerRecord<Long, UserActionAvro> record : records) {
                     calculator.calculate(record.value()).forEach(producer::send);
                 }
 

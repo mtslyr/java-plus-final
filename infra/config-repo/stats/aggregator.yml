@@ -8,7 +8,7 @@ spring:
       value-serializer: ru.practicum.ewm.serialization.KafkaAvroSerializer
     consumer:
       group-id: ewm-stats-aggregator
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.LongDeserializer
       value-deserializer: ru.practicum.ewm.serialization.UserActionDeserializer
       enable-auto-commit: false
       auto-offset-reset: earliest

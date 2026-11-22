@@ -26,12 +26,13 @@ spring:
       user-actions: stats.user-actions.v1
       event-similarity: stats.events-similarity.v1
     consumer:
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       enable-auto-commit: false
       auto-offset-reset: earliest
       user-actions:
         group-id: ewm-stats-analyzer-user-actions
+        key-deserializer: org.apache.kafka.common.serialization.LongDeserializer
         value-deserializer: ru.practicum.ewm.serialization.UserActionDeserializer
       event-similarity:
         group-id: ewm-stats-analyzer-event-similarity
+        key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
         value-deserializer: ru.practicum.ewm.serialization.EventSimilarityDeserializer

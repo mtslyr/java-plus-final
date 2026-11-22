@@ -10,12 +10,12 @@ import ru.practicum.ewm.stats.repository.UserActionWeightRepository;
 
 @Slf4j
 @Component
-public class UserActionLoop extends KafkaPollingLoop<UserActionAvro> {
+public class UserActionLoop extends KafkaPollingLoop<Long, UserActionAvro> {
 
     private final UserActionWeightRepository repository;
     private final WeightsConfig weightsConfig;
 
-    public UserActionLoop(KafkaConsumer<String, UserActionAvro> userActionConsumer,
+    public UserActionLoop(KafkaConsumer<Long, UserActionAvro> userActionConsumer,
                           KafkaTopicProperties topics,
                           UserActionWeightRepository repository,
                           WeightsConfig weightsConfig) {

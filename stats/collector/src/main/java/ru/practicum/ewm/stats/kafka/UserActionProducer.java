@@ -18,22 +18,22 @@ import java.util.concurrent.Future;
 @Component
 public class UserActionProducer implements AutoCloseable {
 
-    private final KafkaProducer<String, SpecificRecordBase> producer;
+    private final KafkaProducer<Long, SpecificRecordBase> producer;
     private final String userActionTopic;
 
     public UserActionProducer(
-            KafkaProducer<String, SpecificRecordBase> producer,
+            KafkaProducer<Long, SpecificRecordBase> producer,
             @Value("${spring.kafka.topic.user-actions}") String topic) {
         this.producer = producer;
         this.userActionTopic = topic;
     }
 
-    public void send(SpecificRecordBase userAction, int key, Instant timestamp) {
-        ProducerRecord<String, SpecificRecordBase> record = new ProducerRecord<>(
+    public void send(SpecificRecordBase userAction, long key, Instant timestamp) {
+        ProducerRecord<Long, SpecificRecordBase> record = new ProducerRecord<>(
                 userActionTopic,
                 null,
                 timestamp.toEpochMilli(),
-                String.valueOf(key),
+                key,
                 userAction
         );
 

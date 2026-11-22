@@ -12,7 +12,7 @@ import java.util.Properties;
 @Configuration
 public class KafkaConfig {
     @Bean
-    public KafkaProducer<String, SpecificRecordBase> kafkaProducer(
+    public KafkaProducer<Long, SpecificRecordBase> kafkaProducer(
             @Value("${spring.kafka.bootstrap-servers}") String bootstrapServers,
             @Value("${spring.kafka.producer.key-serializer}") String keySerializerClassName,
             @Value("${spring.kafka.producer.value-serializer}") String valueSerializerClassName) {

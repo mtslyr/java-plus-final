@@ -16,7 +16,7 @@ import java.util.Properties;
 public class KafkaConfiguration {
 
     @Bean
-    public KafkaConsumer<String, UserActionAvro> kafkaConsumer(
+    public KafkaConsumer<Long, UserActionAvro> kafkaConsumer(
             @Value("${spring.kafka.bootstrap-servers}") String bootstrapServers,
             @Value("${spring.kafka.consumer.group-id}") String groupId,
             @Value("${spring.kafka.consumer.enable-auto-commit}") Boolean enableAutoCommit,

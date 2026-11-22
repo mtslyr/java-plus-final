@@ -13,18 +13,18 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-public abstract class KafkaPollingLoop<V> implements Runnable {
+public abstract class KafkaPollingLoop<K, V> implements Runnable {
 
     private static final Duration POLL_TIMEOUT = Duration.ofSeconds(1);
     private static final long SHUTDOWN_TIMEOUT_SECONDS = 15;
 
-    private final KafkaConsumer<String, V> consumer;
+    private final KafkaConsumer<K, V> consumer;
     private final String topic;
 
     private final CountDownLatch stopped = new CountDownLatch(1);
     private volatile boolean running;
 
-    protected KafkaPollingLoop(KafkaConsumer<String, V> consumer, String topic) {
+    protected KafkaPollingLoop(KafkaConsumer<K, V> consumer, String topic) {
         this.consumer = consumer;
         this.topic = topic;
     }
@@ -39,12 +39,12 @@ public abstract class KafkaPollingLoop<V> implements Runnable {
             log.info("Подписка на топик {}", topic);
 
             while (true) {
-                ConsumerRecords<String, V> records = consumer.poll(POLL_TIMEOUT);
+                ConsumerRecords<K, V> records = consumer.poll(POLL_TIMEOUT);
                 if (records.isEmpty()) {
                     continue;
                 }
 
-                for (ConsumerRecord<String, V> record : records) {
+                for (ConsumerRecord<K, V> record : records) {
                     handle(record.value());
                 }
                 consumer.commitSync();

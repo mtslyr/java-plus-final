@@ -16,9 +16,6 @@ public class KafkaConfiguration {
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
 
-    @Value("${spring.kafka.consumer.key-deserializer}")
-    private String keyDeserializer;
-
     @Value("${spring.kafka.consumer.enable-auto-commit}")
     private Boolean enableAutoCommit;
 
@@ -26,20 +23,22 @@ public class KafkaConfiguration {
     private String autoOffsetReset;
 
     @Bean
-    public KafkaConsumer<String, UserActionAvro> userActionConsumer(
+    public KafkaConsumer<Long, UserActionAvro> userActionConsumer(
             @Value("${spring.kafka.consumer.user-actions.group-id}") String groupId,
+            @Value("${spring.kafka.consumer.user-actions.key-deserializer}") String keyDeserializer,
             @Value("${spring.kafka.consumer.user-actions.value-deserializer}") String valueDeserializer) {
-        return new KafkaConsumer<>(consumerProperties(groupId, valueDeserializer));
+        return new KafkaConsumer<>(consumerProperties(groupId, keyDeserializer, valueDeserializer));
     }
 
     @Bean
     public KafkaConsumer<String, EventSimilarityAvro> eventSimilarityConsumer(
             @Value("${spring.kafka.consumer.event-similarity.group-id}") String groupId,
+            @Value("${spring.kafka.consumer.event-similarity.key-deserializer}") String keyDeserializer,
             @Value("${spring.kafka.consumer.event-similarity.value-deserializer}") String valueDeserializer) {
-        return new KafkaConsumer<>(consumerProperties(groupId, valueDeserializer));
+        return new KafkaConsumer<>(consumerProperties(groupId, keyDeserializer, valueDeserializer));
     }
 
-    private Properties consumerProperties(String groupId, String valueDeserializer) {
+    private Properties consumerProperties(String groupId, String keyDeserializer, String valueDeserializer) {
         Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
