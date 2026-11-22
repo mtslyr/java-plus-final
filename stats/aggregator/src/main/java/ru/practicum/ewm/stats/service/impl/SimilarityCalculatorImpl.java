@@ -54,8 +54,9 @@ public class SimilarityCalculatorImpl implements SimilarityCalculator {
         }
 
         List<EventSimilarityAvro> result = new ArrayList<>();
-        for (int otherEvent : weights.keySet()) {
-            if (otherEvent == event) {
+        for (Map.Entry<Integer, Map<Integer, Double>> entry : weights.entrySet()) {
+            int otherEvent = entry.getKey();
+            if (otherEvent == event || !entry.getValue().containsKey(user)) {
                 continue;
             }
             double minSum = getMinSum(event, otherEvent);

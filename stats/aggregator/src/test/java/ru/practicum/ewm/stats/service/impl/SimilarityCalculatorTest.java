@@ -47,7 +47,7 @@ public class SimilarityCalculatorTest {
 
         assertSingleSimilarity(calculator.calculate(action(1, 20, VIEW)), 10, 20, 0.632);
 
-        assertSingleSimilarity(calculator.calculate(action(2, 20, LIKE)), 10, 20, 0.338);
+        assertThat(calculator.calculate(action(2, 20, LIKE))).isEmpty();
 
         assertSingleSimilarity(calculator.calculate(action(1, 20, LIKE)), 10, 20, 0.707);
 
