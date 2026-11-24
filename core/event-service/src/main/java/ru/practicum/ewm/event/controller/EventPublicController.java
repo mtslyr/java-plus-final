@@ -34,19 +34,19 @@ public class EventPublicController {
 
     @GetMapping("/events/{id}")
     public EventFullDto getPublishedById(@PathVariable Long id,
-                                         @RequestHeader(USER_ID_HEADER) long userId) {
+                                         @RequestHeader(USER_ID_HEADER) Long userId) {
         return eventService.getPublishedById(id, userId);
     }
 
     @GetMapping("/events/recommendations")
-    public List<EventShortDto> getRecommendations(@RequestHeader(USER_ID_HEADER) long userId,
+    public List<EventShortDto> getRecommendations(@RequestHeader(USER_ID_HEADER) Long userId,
                                                   @RequestParam(defaultValue = "10") Integer maxResults) {
         return eventService.getRecommendations(userId, maxResults);
     }
 
     @PutMapping("/events/{eventId}/like")
     public void like(@PathVariable Long eventId,
-                     @RequestHeader(USER_ID_HEADER) long userId) {
+                     @RequestHeader(USER_ID_HEADER) Long userId) {
         eventService.like(userId, eventId);
     }
 }
