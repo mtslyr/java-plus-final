@@ -11,6 +11,8 @@ import java.util.Map;
 @Component
 public class RequestClientFallbackFactory implements FallbackFactory<RequestClient> {
 
+    private static final String SERVICE = "request-service";
+
     @Override
     public RequestClient create(Throwable cause) {
         return new RequestClient() {
@@ -18,6 +20,11 @@ public class RequestClientFallbackFactory implements FallbackFactory<RequestClie
             public Map<Long, Long> getConfirmedCounts(Collection<Long> eventIds) {
                 log.warn("Confirmed requests are unavailable: {}", cause.getMessage());
                 return Map.of();
+            }
+
+            @Override
+            public boolean isParticipant(Long userId, Long eventId) {
+                throw FallbackSupport.propagate(SERVICE, cause);
             }
 
             @Override

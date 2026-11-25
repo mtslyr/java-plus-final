@@ -11,8 +11,4 @@ public class RatingStatsDto {
 
     private final Long likes;
     private final Long dislikes;
-
-    public Long getRating() {
-        return likes - dislikes;
-    }
 }

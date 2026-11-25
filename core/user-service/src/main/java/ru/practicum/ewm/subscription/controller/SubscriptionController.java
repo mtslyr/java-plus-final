@@ -44,14 +44,12 @@ public class SubscriptionController {
         return subscriptionService.reject(userId, subscriptionId);
     }
 
-    // получение объектов-подписок
     @GetMapping
     public List<SubscriptionDto> getAllByUser(@PathVariable Long userId) {
         log.debug("Request to get all subscriptions: userId={}", userId);
         return subscriptionService.getAllByUser(userId);
     }
 
-    // получение юзеров-подписчиков
     @GetMapping("/followers")
     public List<UserShortDto> getFollowers(@PathVariable Long userId) {
         log.debug("Request to get followers: userId={}", userId);

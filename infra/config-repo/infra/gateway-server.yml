@@ -7,8 +7,6 @@ spring:
       discovery:
         locator:
           enabled: false
-      # Routes are matched in order: specific paths go before general ones,
-      # e.g. /users/*/events/*/requests (request-service) before /users/*/events/** (event-service).
       routes:
         - id: request-service
           uri: lb://request-service
